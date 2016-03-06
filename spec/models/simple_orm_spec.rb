@@ -20,7 +20,6 @@ describe SimpleOrm do
       it "should return an array" do
         expect(subject.all.class).to eq(Array)
       end
-
     end
 
     describe "#find" do
@@ -28,8 +27,16 @@ describe SimpleOrm do
         expect(subject).to respond_to(:find)
       end
 
-      it "should return  the mixedin class's object" do
+      it "should return the mixin class's object" do
         expect(subject.find(1).class).to eq(User)
+      end
+
+      it "should have data for user" do
+        # TODO : populate test data
+        expect(subject.find(1).id).to eq(1)
+        expect(subject.find(1).user_type).to eq("SUPER ADMIN")
+        expect(subject.find(1).username).to eq("admin")
+        expect(subject.find(1).password).to eq("admin")
       end
     end
   end

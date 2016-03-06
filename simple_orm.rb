@@ -25,7 +25,6 @@ module SimpleOrm
     end
   end
 
-
   def conn
     @conn ||= get_conn
   end
@@ -33,22 +32,25 @@ module SimpleOrm
   private
 
   def init_for_orm(row)
-    define_instance_variables_for_class(row)
     new_object = self.class.new
     row.each do |key, value|
-      new_object.send("#{key}=", value) unless key == "id"
+      # TODO : check only once
+      define_instance_variables_for_class unless new_object.respond_to?("#{key}=")
+      new_object.send("#{key}=", value)
     end
     return new_object
   end
 
-  def define_instance_variables_for_class(row)
+  def define_instance_variables_for_class
+    # TODO : SHOW COLUMNS FROM users; row has Field with column name
+    result = conn.query("SELECT * FROM #{self.class.to_s}s")
+    row = result.first
+
     klass = self.class
     row.keys.each do |key|
-      klass.define_singleton_method(key) do
-        klass.instance_variable_get("@#{key}")
-      end
-      klass.define_singleton_method("#{key}=") do |attr_value|
-        klass.instance_variable_set("@#{key}", attr_value)
+      klass.class_eval do
+        define_method(key) { klass.instance_variable_get("@#{key}"); }
+        define_method("#{key}=") { |attr_value| klass.instance_variable_set("@#{key}", attr_value); }
       end
     end
   end
@@ -64,12 +66,4 @@ module SimpleOrm
       password: @db_password,
       database: @db_name)
   end
-
-  # @users_result = @client.query("SELECT * FROM users")
-  # @employees_result = @client.query("SELECT * FROM employees")
-  # @users_result.each { |row| puts row }; nil
-  # @employees_result.each { |row| puts row }; nil
-
-
-
 end

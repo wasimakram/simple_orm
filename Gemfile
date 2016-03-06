@@ -2,8 +2,7 @@ source :rubygems
 
 gem "mysql2"
 
-
-group :development do
+group :development, :test do
   gem "rspec"
   gem "byebug"
   gem "pry"
