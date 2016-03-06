@@ -1,4 +1,5 @@
 require "mysql2"
+require "pry"
 
 module SimpleOrm
 
@@ -42,7 +43,6 @@ module SimpleOrm
 
   def define_instance_variables_for_class(row)
     klass = self.class
-    puts "Creating instance variable"
     row.keys.each do |key|
       klass.define_singleton_method(key) do
         klass.instance_variable_get("@#{key}")

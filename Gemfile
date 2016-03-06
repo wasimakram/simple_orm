@@ -4,4 +4,5 @@ gem "mysql2"
 gem "rspec"
 
 gem "byebug"
-gem "pry-debugger"
+gem "pry"
+# gem "pry-debugger"
