@@ -2,10 +2,6 @@ require "mysql2"
 
 module SimpleOrm
 
-  def initialize(options={})
-
-  end
-
   def all(options={})
     result = conn.query("SELECT * FROM #{self.class.to_s}s")
     objs_array = []
@@ -36,9 +32,26 @@ module SimpleOrm
   private
 
   def init_for_orm(row)
-    self.class.new
+    define_instance_variables_for_class(row)
+    new_object = self.class.new
+    row.each do |key, value|
+      new_object.send("#{key}=", value) unless key == "id"
+    end
+    return new_object
   end
 
+  def define_instance_variables_for_class(row)
+    klass = self.class
+    puts "Creating instance variable"
+    row.keys.each do |key|
+      klass.define_singleton_method(key) do
+        klass.instance_variable_get("@#{key}")
+      end
+      klass.define_singleton_method("#{key}=") do |attr_value|
+        klass.instance_variable_set("@#{key}", attr_value)
+      end
+    end
+  end
 
   def get_conn
     @db_host  = "127.0.0.1"
