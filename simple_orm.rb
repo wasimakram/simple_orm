@@ -4,7 +4,7 @@ require "pry"
 module SimpleOrm
 
   def all(options={})
-    result = conn.query("SELECT * FROM #{self.class.to_s}s")
+    result = conn.query("SELECT * FROM #{table_name}")
     objs_array = []
     result.each do |row|
       objs_array << init_for_orm(row)
@@ -13,15 +13,15 @@ module SimpleOrm
   end
 
   def find(id)
-    result = conn.query("SELECT * FROM #{self.class.to_s}s where id = #{id}")
-    obj = []
+    result = conn.query("SELECT * FROM #{table_name} where id = #{id}")
+    objs = []
     result.each do |row|
-      obj << init_for_orm(row)
+      objs << init_for_orm(row)
     end
-    if obj.length == 1
-      return obj.first
+    if objs.length == 1
+      return objs.first
     else
-      return obj
+      return objs # Handles when id isn't unique
     end
   end
 
@@ -43,7 +43,7 @@ module SimpleOrm
 
   def define_instance_variables_for_class
     # TODO : SHOW COLUMNS FROM users; row has Field with column name
-    result = conn.query("SELECT * FROM #{self.class.to_s}s")
+    result = conn.query("SELECT * FROM #{table_name}")
     row = result.first
 
     klass = self.class
@@ -53,6 +53,14 @@ module SimpleOrm
         define_method("#{key}=") { |attr_value| klass.instance_variable_set("@#{key}", attr_value); }
       end
     end
+  end
+
+  def table_name
+    @table_name || self.class.to_s + "s"
+  end
+
+  def table_name=(tb_name)
+    @table_name = tb_name
   end
 
   def get_conn
