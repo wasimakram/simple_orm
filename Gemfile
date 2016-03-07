@@ -4,7 +4,7 @@ gem "mysql2"
 
 group :development, :test do
   gem "rspec"
-  gem "byebug"
   gem "pry"
+  gem 'pry-byebug'
   gem "guard-rspec"
 end

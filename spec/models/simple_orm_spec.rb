@@ -10,12 +10,12 @@ end
 describe SimpleOrm do
   describe User do
 
-    let(:user) {User.new}
+    let(:user_class) { User }
 
-    describe "#all" do
-      subject {user.all}
+    describe ".all" do
+      subject {user_class.all}
       it "should be able to call all" do
-        expect(user).to respond_to(:all)
+        expect(user_class).to respond_to(:all)
       end
 
       it "should return an array" do
@@ -23,11 +23,11 @@ describe SimpleOrm do
       end
     end
 
-    describe "#find" do
-      subject { user.find(1) }
+    describe ".find" do
+      subject { user_class.find(1) }
 
       it "should be able to call find" do
-        expect(user).to respond_to(:find)
+        expect(user_class).to respond_to(:find)
       end
 
       it "should return the mixin class's object" do
@@ -35,7 +35,7 @@ describe SimpleOrm do
       end
 
       it "should have data for user" do
-        # TODO : populate test data
+        # TODO : populate test data using fixtures
         expect(subject.id).to eq(1)
         expect(subject.user_type).to eq("SUPER ADMIN")
         expect(subject.username).to eq("admin")
@@ -43,10 +43,10 @@ describe SimpleOrm do
       end
     end
 
-    describe "#column_names" do
-      subject { user.column_names }
+    describe ".column_names" do
+      subject { user_class.column_names }
       it "should be able to call column_names" do
-        expect(user).to respond_to(:column_names)
+        expect(user_class).to respond_to(:column_names)
       end
 
       it "should return the Array of column names" do
@@ -54,8 +54,7 @@ describe SimpleOrm do
       end
 
       it "should have table column names" do
-        # TODO : populate test data
-        expect(subject).to eq([])
+        expect(subject).to eq(["id", "employee_id", "user_type", "username", "password"])
       end
     end
   end
@@ -63,7 +62,7 @@ describe SimpleOrm do
 
   describe Employee do
 
-    subject {Employee.new}
+    subject { Employee }
 
     describe "#all" do
       it "should be able to call all" do
