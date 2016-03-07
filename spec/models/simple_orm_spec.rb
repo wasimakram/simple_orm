@@ -8,6 +8,7 @@ class User
 end
 
 describe SimpleOrm do
+  # TODO have a test db for SimpleOrm
   describe User do
 
     let(:user_class) { User }
