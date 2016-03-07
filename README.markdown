@@ -31,11 +31,17 @@ A simple Orm inspired by active recrod.
     # adds the following methods #find, #all and properties and relationships based on the users table.
 
     # find's the user object with with a given id
-    def find(id)
+    # def self.find(id)
     ...
 
     # returns an array of objects for the class
-    def all
+    # def self.all
     ...
+    end
+
+    user = User.find(1) # "Select * from users where id = 1"
+    user.username # "will get username stored in db"
+
+
   ###
   ```
