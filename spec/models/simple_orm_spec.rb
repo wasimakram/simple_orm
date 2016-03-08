@@ -14,6 +14,19 @@ describe SimpleOrm do
 
     let(:test_class) { User }
     let(:test_column_names) { ["id", "employee_id", "user_type", "username", "password"] }
+    let(:test_instance_hash) { {:id=>1, :employee_id=>nil, :user_type=>"SUPER ADMIN", :username=>"admin", :password=>"admin"} }
+
+    describe "#to_h" do
+      subject { test_class.find(1).to_h }
+
+      it { should eq(test_instance_hash) }
+    end
+
+    describe "#to_s" do
+      subject { test_class.find(1).to_s }
+
+      it { should eq(test_instance_hash.to_s) }
+    end
 
     describe "#employee" do
       it "respond to method employee" do
@@ -48,7 +61,7 @@ describe SimpleOrm do
 
       context "when id is present" do
         subject { test_class.find(1) }
-        
+
         it "return the mixin class's object" do
           expect(subject.class).to eq(test_class)
         end
