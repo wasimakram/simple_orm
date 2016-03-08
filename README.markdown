@@ -26,6 +26,9 @@ A simple Orm inspired by active recrod.
     class User
     ...
       include SimpleOrm
+
+      # If users table has employee_id they can be fetched by calling has_one method
+      has_one :employee
     ...
 
     # adds the following methods #find, #all and properties and relationships based on the users table.
@@ -39,9 +42,12 @@ A simple Orm inspired by active recrod.
     ...
     end
 
-    user = User.find(1) # "Select * from users where id = 1"
-    user.username # "will get username stored in db"
+    user = User.find(1)          # Execute SQL : "Select * from users where id = 1"
+    user.username                # get username stored in db
+    user.username = "wasimakram" # set instance variable username
+    user.save                    # Update user in db using attributes
 
+    user.employee                # returns an employee object
 
   ###
   ```
