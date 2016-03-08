@@ -29,7 +29,7 @@ module SimpleOrm
 
   module ClassMethods
     def all(options={})
-      result = conn.query("SELECT * FROM #{@@table_name}")
+      result = query("SELECT * FROM #{@@table_name}")
       objs_array = []
       result.each do |row|
         objs_array << initialize_for_orm(row)
@@ -38,7 +38,7 @@ module SimpleOrm
     end
 
     def find(id)
-      result = conn.query("SELECT * FROM #{@@table_name} where id = #{id}")
+      result = query("SELECT * FROM #{@@table_name} where id = #{id}")
       objs = []
       result.each do |row|
         objs << initialize_for_orm(row)
@@ -59,6 +59,11 @@ module SimpleOrm
       @@column_names
     end
 
+    def query(_query)
+      puts "Executing SQL: #{_query}"
+      conn.query(_query)
+    end
+
     private
 
     def conn
@@ -75,7 +80,7 @@ module SimpleOrm
 
     def define_instance_variables_for_class
       @@column_names = []
-      result = conn.query("SHOW COLUMNS FROM #{@@table_name}")
+      result = query("SHOW COLUMNS FROM #{@@table_name}")
       result.map{ |r| @@column_names << r["Field"] }
       klass = self
       @@column_names.each do |key|

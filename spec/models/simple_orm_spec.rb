@@ -22,6 +22,14 @@ describe SimpleOrm do
       it "should return an array" do
         expect(subject.class).to eq(Array)
       end
+
+      it "should return a list of all users" do
+        users_array = []
+        [1..7].each do |index|
+          users_array << User.find(index)
+        end
+        expect(subject).to eq(users_array)
+      end
     end
 
     describe ".find" do
