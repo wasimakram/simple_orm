@@ -23,10 +23,20 @@ module SimpleOrm
     base.extend SimpleOrm::ClassMethods
   end
 
-
   module ClassMethods
     def self.extended(orm_base)
       orm_base.setup
+    end
+
+    ## Associations ##
+    def has_one(association)
+      # TODO : test if rails is present use String#classify
+      class_name = association.to_s.split('_').collect!{ |w| w.capitalize }.join
+      klass = Object.const_get(class_name)
+
+      define_method(association) do
+        klass.find("#{association}_id")
+      end
     end
 
     ## Query Methods ##
@@ -41,15 +51,17 @@ module SimpleOrm
 
     def find(id)
       result = query("SELECT * FROM #{@@table_name} where id = #{id}")
+      return initialize_for_orm(result.first) if result.first
+    end
+
+    # TODO : WIP
+    def where(id)
+      result = query("SELECT * FROM #{@@table_name} where id = #{id}")
       objs = []
       result.each do |row|
         objs << initialize_for_orm(row)
       end
-      if objs.length == 1
-        return objs.first
-      else
-        return objs
-      end
+      objs
     end
 
     def setup

@@ -5,18 +5,40 @@ end
 
 class User
   include SimpleOrm
+  has_one :employee
 end
 
 describe SimpleOrm do
   # TODO have a test db for SimpleOrm
   describe User do
 
-    let(:user_class) { User }
+    let(:test_class) { User }
+    let(:test_column_names) { ["id", "employee_id", "user_type", "username", "password"] }
+
+    describe "#employee" do
+      it "respond to method employee" do
+        subject { test_class.find(2).employee }
+
+        expect(subject).to respond_to(:employee)
+      end
+
+      context "when no employee is present" do
+        subject { test_class.find(1).employee }
+
+        it { should be_nil }
+      end
+
+      context "when employee is present" do
+        subject { test_class.find(2).employee }
+
+        it { should be_instance_of(Employee) }
+      end
+    end
 
     describe ".all" do
-      subject {user_class.all}
+      subject { test_class.all }
       it "should be able to call all" do
-        expect(user_class).to respond_to(:all)
+        expect(test_class).to respond_to(:all)
       end
 
       it "should return an array" do
@@ -24,11 +46,11 @@ describe SimpleOrm do
       end
 
       it "should return a list of all users" do
-        users_array = []
+        test_array = []
         (1..7).each do |index|
-          users_array << User.find(index).to_h
+          test_array << test_class.find(index).to_h
         end
-        expect(subject.map(&:to_h)).to eq(users_array)
+        expect(subject.map(&:to_h)).to eq(test_array)
       end
     end
 
@@ -41,14 +63,14 @@ describe SimpleOrm do
     end
 
     describe ".find" do
-      subject { user_class.find(1) }
+      subject { test_class.find(1) }
 
       it "should be able to call find" do
-        expect(user_class).to respond_to(:find)
+        expect(test_class).to respond_to(:find)
       end
 
       it "should return the mixin class's object" do
-        expect(subject.class).to eq(User)
+        expect(subject.class).to eq(test_class)
       end
 
       it "should have data for user" do
@@ -61,9 +83,9 @@ describe SimpleOrm do
     end
 
     describe ".column_names" do
-      subject { user_class.column_names }
+      subject { test_class.column_names }
       it "should be able to call column_names" do
-        expect(user_class).to respond_to(:column_names)
+        expect(test_class).to respond_to(:column_names)
       end
 
       it "should return the Array of column names" do
@@ -71,7 +93,7 @@ describe SimpleOrm do
       end
 
       it "should have table column names" do
-        expect(subject).to eq(["id", "employee_id", "user_type", "username", "password"])
+        expect(subject).to eq(test_column_names)
       end
     end
   end
