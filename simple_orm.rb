@@ -15,19 +15,21 @@ module SimpleOrm
     self.class.column_names.each do |column_name|
       hash[column_name.to_sym] = self.send(column_name)
     end
-    hash.to_s
+    hash
   end
 
   ## Class Methods ##
-
   def self.included(base)
     base.extend SimpleOrm::ClassMethods
-    base.setup
   end
 
-  ## Query Methods ##
 
   module ClassMethods
+    def self.extended(orm_base)
+      orm_base.setup
+    end
+
+    ## Query Methods ##
     def all(options={})
       result = query("SELECT * FROM #{@@table_name}")
       objs_array = []
@@ -46,7 +48,7 @@ module SimpleOrm
       if objs.length == 1
         return objs.first
       else
-        return objs # Handles when id isn't unique
+        return objs
       end
     end
 
@@ -82,11 +84,10 @@ module SimpleOrm
       @@column_names = []
       result = query("SHOW COLUMNS FROM #{@@table_name}")
       result.map{ |r| @@column_names << r["Field"] }
-      klass = self
       @@column_names.each do |key|
         class_eval do
-          define_method(key) { klass.instance_variable_get("@#{key}"); }
-          define_method("#{key}=") { |attr_value| klass.instance_variable_set("@#{key}", attr_value); }
+          define_method(key) { instance_variable_get("@#{key}"); }
+          define_method("#{key}=") { |attr_value| instance_variable_set("@#{key}", attr_value); }
         end
       end
     end

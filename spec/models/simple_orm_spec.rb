@@ -25,11 +25,19 @@ describe SimpleOrm do
 
       it "should return a list of all users" do
         users_array = []
-        [1..7].each do |index|
-          users_array << User.find(index)
+        (1..7).each do |index|
+          users_array << User.find(index).to_h
         end
-        expect(subject).to eq(users_array)
+        expect(subject.map(&:to_h)).to eq(users_array)
       end
+    end
+
+    describe ".first" do
+      xit "should be able to call first"
+    end
+
+    describe ".order" do
+      xit "should be able to call order"
     end
 
     describe ".find" do
