@@ -41,6 +41,7 @@ module SimpleOrm
 
     ## Query Methods ##
     def find(id)
+      return nil unless id
       result = query("SELECT * FROM #{@@table_name} where id = #{id}")
       return initialize_for_orm(result.first) if result.first
     end

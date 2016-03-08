@@ -36,25 +36,30 @@ describe SimpleOrm do
     end
 
     describe ".find" do
-      subject { test_class.find(1) }
       it "be able to call find" do
         expect(test_class).to respond_to(:find)
       end
 
-      it "be able to call find" do
-        expect(test_class).to respond_to(:find)
+      context "when id is nil" do
+        subject { test_class.find(nil) }
+
+        it { should be_nil }
       end
 
-      it "return the mixin class's object" do
-        expect(subject.class).to eq(test_class)
-      end
+      context "when id is present" do
+        subject { test_class.find(1) }
+        
+        it "return the mixin class's object" do
+          expect(subject.class).to eq(test_class)
+        end
 
-      it "have data for user" do
-        # TODO : populate test data using fixtures
-        expect(subject.id).to eq(1)
-        expect(subject.user_type).to eq("SUPER ADMIN")
-        expect(subject.username).to eq("admin")
-        expect(subject.password).to eq("admin")
+        it "have data for user" do
+          # TODO : populate test data using fixtures
+          expect(subject.id).to eq(1)
+          expect(subject.user_type).to eq("SUPER ADMIN")
+          expect(subject.username).to eq("admin")
+          expect(subject.password).to eq("admin")
+        end
       end
     end
 
@@ -107,7 +112,7 @@ describe SimpleOrm do
 
     subject { Employee }
 
-    describe "#all" do
+    describe ".all" do
       it "be able to call all" do
         expect(subject).to respond_to(:all)
       end
@@ -118,7 +123,7 @@ describe SimpleOrm do
 
     end
 
-    describe "#find" do
+    describe ".find" do
       it "be able to call find" do
         expect(subject).to respond_to(:find)
       end
