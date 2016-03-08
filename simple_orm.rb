@@ -35,11 +35,16 @@ module SimpleOrm
       klass = Object.const_get(class_name)
 
       define_method(association) do
-        klass.find("#{association}_id")
+        klass.find self.send("#{association}_id")
       end
     end
 
     ## Query Methods ##
+    def find(id)
+      result = query("SELECT * FROM #{@@table_name} where id = #{id}")
+      return initialize_for_orm(result.first) if result.first
+    end
+
     def all(options={})
       result = query("SELECT * FROM #{@@table_name}")
       objs_array = []
@@ -47,11 +52,6 @@ module SimpleOrm
         objs_array << initialize_for_orm(row)
       end
       return objs_array
-    end
-
-    def find(id)
-      result = query("SELECT * FROM #{@@table_name} where id = #{id}")
-      return initialize_for_orm(result.first) if result.first
     end
 
     # TODO : WIP
