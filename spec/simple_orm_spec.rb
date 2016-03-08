@@ -1,4 +1,4 @@
-require_relative "../../simple_orm.rb"
+require_relative "../lib/simple_orm.rb"
 class Employee
   include SimpleOrm
 end
