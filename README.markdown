@@ -42,12 +42,19 @@ A simple Orm inspired by active recrod.
     ...
     end
 
+    # RU for now missing CD of CRUD :)
     user = User.find(1)          # Execute SQL : "Select * from users where id = 1"
     user.username                # get username stored in db
     user.username = "wasimakram" # set instance variable username
     user.save                    # Update user in db using attributes
 
+    # has_one association
     user.employee                # returns an employee object
+
+    # helper methods
+    User.column_names            # list of all columns in db
+    user.to_h                    # hash of user attributes
+    user.to_s                    # string of to_h
 
   ###
   ```
